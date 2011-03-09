@@ -9,83 +9,38 @@
    :backlinks: none
    :local:
 
-1台のホスト上で動かす
+ls4-standaloneを動かす
 ----------------------
 
-.. TODO: ls4-standalone command
-
-LS4を1台のホスト上で動かしてテストすることができます：
+**ls4-standalone** コマンドを使うと、単一のプロセスでサーバを立ち上げることができます。 *-s* 引数にデータを保存するパスを指定します。 *-t* 引数にポート番号を指定すると、HTTPクライアントを使ってデータの読み書きができます。
 
 ::
 
-    # 1. MDS（Tokyo Tyrant）を起動する
-    #    ここでは単一ノード構成で起動します
-    [localhost]$ ttserver mds.tct &
+    $ ls4-standalone -s ./data -t 18080
+
+これで単一サーバのLS4を利用する準備ができました。 *ls4cmd* コマンドを使って動作を確認してみてください。
 
 ::
 
-    # 2. CSを起動する
-    #    --mds (MDSのアドレス) と -s (設定ディレクトリ) 引数が必要です
-    [localhost]$ mkdir data-cs
-    [localhost]$ ls4-cs --mds 127.0.0.1 -s ./data-cs &
+    $ ls4cmd add_data key1 val1
+
+    $ ls4cmd get_data key1
+    val1
+
+データの読み書きにはHTTPを使うこともできます。
 
 ::
 
-    # 3. DSを起動する
-    #    次の引数が必要です：
-    #      --cs (CSのアドレス)
-    #      --address (このノードのアドレス)
-    #      --nid (一意なノードID)
-    #      --rsid (参加するレプリケーション･セットのID)
-    #      --name (分かりやすいノード名)
-    #      --store (ストレージへのパス)
-    [localhost]$ mkdir data-ds0
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18900 --nid 0 --rsid 0 \
-                           --name ds0 --store ./data-ds0 &
-
-::
-
-    # 4. さらにDSを起動していく...
-    [localhost]$ mkdir data-ds1
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18901 --nid 1 --rsid 0 \
-                           --name ds1 --store ./data-ds1 &
-
-    [localhost]$ mkdir data-ds2
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18902 --nid 2 --rsid 1 \
-                           --name ds2 --store ./data-ds2 &
-
-    [localhost]$ mkdir data-ds3
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18903 --nid 3 --rsid 1 \
-                           --name ds3 --store ./data-ds3 --http 18080 &
+    $ curl -X POST -d 'data=value1&attrs={"test":"attr"}' http://localhost:18080/data/key1
     
-    # HTTPクライアントを受け入れるために --http (port) 引数を指定します
-
-*ls4ctl* コマンドを使ってクラスタの状態を確認してください。
-
-::
-
-    [localhost] $ ls4ctl localhost nodes
-    nid            name                 address                location    rsid      state
-      0             ds0         127.0.0.1:18900      subnet-127.000.000       0     active
-      1             ds1         127.0.0.1:18901      subnet-127.000.000       0     active
-      2             ds2         127.0.0.1:18902      subnet-127.000.000       1     active
-      3             ds3         127.0.0.1:18903      subnet-127.000.000       1     active
-
-これでHTTPクライアントを使ってLS4を利用する準備ができました。
-
-::
-
-    [localhost]$ curl -X POST -d 'data=value1&attrs={"test":"attr"}' http://localhost:18080/data/key1
-    
-    [localhost]$ curl -X GET http://localhost:18080/data/key1
+    $ curl -X GET http://localhost:18080/data/key1
     value1
     
-    [localhost]$ curl -X GET http://localhost:18080/attrs/key1
+    $ curl -X GET http://localhost:18080/attrs/key1
     {"test":"attr"}
     
-    [localhost]$ curl -X GET -d 'format=tsv' http://localhost:18080/attrs/key1
+    $ curl -X GET -d 'format=tsv' http://localhost:18080/attrs/key1
     test	attr
-
 
 関連： :ref:`ja_api`
 
@@ -95,33 +50,41 @@ LS4を1台のホスト上で動かしてテストすることができます：
 クラスタ構成
 ----------------------
 
-以下の例では、次のような6台のノードからなるクラスタを構成します：
+複数のサーバでクラスタを構築するには、 **spread-cs**, **spread-ds** そして **spread-gw** コマンドを使います。
+
+ここでは次のような6台のノードからなるクラスタを構築します。MDSにはTokyo Tyrantを使い、デュアルマスタ構成とします。
 
 ::
 
-         node01               node02
-        +------+             +------+
-        |  MDS --------------- MDS  |
-        |      |      \      +------+
-        |  CS  |       \
-        +------+        --- デュアルマスタ構成
-    
-     +- - - - - - +       +- - - - - - +
-     |   node03   |       |   node05   |
-        +------+             +------+
-     |  |  DS  |  |       |  |  DS  |  |
-        +------+             +------+   
-     |            |       |            |
-         node04               node06    
-     |  +------+  |       |  +------+  |
-        |  DS  |             |  DS  |   
-     |  +------+  |       |  +------+  |
-     +------------+       +------------+
-    replication-set 0    replication-set 1
+        node01                node02
+        +----------+          +----------+
+        | ttserver ------------ ttserver |
+        |          |          +----------+
+        |  ls4-cs  |
+        +----------+
+
+     +- - - - - - - - +    +- - - - - - - - +
+        node01                node02         
+     |  +----------+  |    |  +----------+  |
+        |  ls4-ds  |          |  ls4-cs  |   
+     |  +----------+  |    |  +----------+  |
+                                             
+     |  node01        |    |  node02        |    application server
+        +----------+          +----------+       +----------+
+     |  |  ls4-ds  |  |    |  |  ls4-cs  |  |    |  ls4-gw  |
+        +----------+          +----------+       +----------+
+     + - - - - - - - -+    + - - - - - - - -+
+     replication-set 1     replication-set 2
+
+
+MDSの起動
+^^^^^^^^^^^^^^^^^^^^^^
+
+まずTokyo Tyrantをデュアルマスタ構成で起動します。
 
 ::
 
-    # node01, node02: Tokyo Tyrantをデュアルマスタ構成で起動します
+    # node01, node02: Tokyo Tyrantをデュアルマスタ構成で起動
     [on node01]$ mkdir /var/ls4/mds1
     [on node01]$ ttserver /var/ls4/mds1/db.tct -ulog /var/ls4/mds1/ulog -sid 1 \
                           -mhost node02 -rts /var/ls4/mds1/node02.rts
@@ -129,46 +92,71 @@ LS4を1台のホスト上で動かしてテストすることができます：
     [on node02]$ mkdir /var/ls4/mds2
     [on node02]$ ttserver /var/ls4/mds2/db.tct -ulog /var/ls4/mds2/ulog -sid 2 \
                           -mhost node01 -rts /var/ls4/mds2/node01.rts
-    
-    # node01: CSを起動します
+
+CSの起動
+^^^^^^^^^^^^^^^^^^^^^^
+
+次にCSを起動します。
+
+::
+
+    # node01: CSを起動
     [on node01]$ mkdir /var/ls4/cs
     [on node01]$ ls4-cs --mds tt:node01--node02 -s /var/ls4/cs
-    
-    # node03: DSを起動します（レプリケーション･セット 0）
+
+DSの起動
+^^^^^^^^^^^^^^^^^^^^^^
+
+DSを起動していきます。複数のDSで1つのレプリケーション･セットを構成します。
+
+::
+
+    # node03, node04: レプリケーション･セット1を構成
     [on node03]$ mkdir /var/ls4/node03
-    [on node03]$ ls4-ds --cs node01 --address node03 --nid 0 --rsid 0 \
+    [on node03]$ ls4-ds --cs node01 --address node03 --nid 1 --rsid 1 \
                            --name node03 -s /var/ls4/node03
     
-    # node04: DSを起動します（レプリケーション･セット 0）
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --rsid 0 \
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --rsid 1 \
                            --name node04 -s /var/ls4/node04
-    
-    # node05: DSを起動します（レプリケーション･セット 1）
+
+::
+
+    # node05, node06: レプリケーション･セット2を構成
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --rsid 1 \
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --rsid 2 \
                            --name node05 -s /var/ls4/node05
     
-    # node06: DSを起動します（レプリケーション･セット 1）
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --rsid 1 \
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --rsid 2 \
                            --name node06 -s /var/ls4/node06
-    
-    # アプリケーションサーバ: GWを起動します
+
+
+GWの起動（オプショナル）
+^^^^^^^^^^^^^^^^^^^^^^
+
+最後にGWを起動してます。DSもGWとして使うことができるので、GWの起動はオプショナルです。
+
+::
+
+    # アプリケーションサーバ: GWを起動
     [on app-svr]$ ls4-gw --cs node01 --port 18800 --http 18080
 
-*ls4ctl* コマンドを使ってクラスタの状態を確認してください。
+状態の確認
+^^^^^^^^^^^^^^^^^^^^^^
+
+クラスタを構築したら、 *ls4ctl* コマンドを使って状態を確認してください。
 
 ::
 
     $ ls4ctl node01 nodes
     nid            name                 address                location    rsid      state
-      0          node03       192.168.0.13:18900      subnet-192.168.000       0     active
-      1          node04       192.168.0.14:18900      subnet-192.168.000       0     active
-      2          node05       192.168.0.15:18900      subnet-192.168.000       1     active
-      3          node06       192.168.0.16:18900      subnet-192.168.000       1     active
+      0          node03       192.168.0.13:18900      subnet-192.168.000       1     active
+      1          node04       192.168.0.14:18900      subnet-192.168.000       1     active
+      2          node05       192.168.0.15:18900      subnet-192.168.000       2     active
+      3          node06       192.168.0.16:18900      subnet-192.168.000       2     active
 
-これで準備が整いました。HTTPクライアントを使うか、 *ls4cmd* コマンドを使って動作を確認してみてください。
+これでLS4を利用する準備が整いました。 *ls4cmd* コマンドかHTTPクライアントを使って、動作を確認してみてください。
 
 ::
 
@@ -179,9 +167,12 @@ LS4を1台のホスト上で動かしてテストすることができます：
     {"type":"png"}
     val1
 
+CSのIPアドレス
+----------------------
+
 CS (Configuration Server) のIPアドレスは後から変更できないことに注意してください。そのIPアドレスがクラスタの識別子になるとも言えます。
 
-CSに専用のIPエイリアスを割り当てておくのは非常に良いアイディアです：
+サーバやNICが故障した場合に備えて、CSに専用のIPエイリアスを割り当てておくのは非常に良いアイディアです：
 
 ::
 
