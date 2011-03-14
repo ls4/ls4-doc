@@ -9,25 +9,26 @@
    :backlinks: none
    :local:
 
-ls4-standaloneを動かす
+1台のサーバで動かす（スタンドアロン）
 ----------------------
 
-**ls4-standalone** コマンドを使うと、単一のプロセスでサーバを立ち上げることができます。 *-s* 引数にデータを保存するパスを指定します。 *-t* 引数にポート番号を指定すると、HTTPクライアントを使ってデータの読み書きができます。
+**ls4-standalone** コマンドを使うと、単一のプロセスでサーバを立ち上げることができます。LS4の試験的な利用に便利です。
+
+*-s* 引数にデータを保存するパスを指定します。 *-t* 引数にポート番号を指定すると、HTTPクライアントを使ってデータの読み書きができます：
 
 ::
 
     $ ls4-standalone -s ./data -t 18080
 
-これで単一サーバのLS4を利用する準備ができました。 *ls4cmd* コマンドを使って動作を確認してみてください。
+これで単一サーバのLS4を利用する準備ができました。コマンドラインクライアントツールの *ls4cmd* コマンドを使って、動作を確認してみてください：
 
 ::
 
     $ ls4cmd add_data key1 val1
-
     $ ls4cmd get_data key1
     val1
 
-データの読み書きにはHTTPを使うこともできます。
+HTTPクライアントを使ってデータを読み書きすることもできます：
 
 ::
 
@@ -47,10 +48,10 @@ ls4-standaloneを動かす
 関連： :ref:`ja_command`
 
 
-クラスタ構成
+クラスタ構成で動かす
 ----------------------
 
-複数のサーバでクラスタを構築するには、 **spread-cs**, **spread-ds** そして **spread-gw** コマンドを使います。
+複数のサーバでクラスタを構築するには、 **ls4-cs**, **ls4-ds** そして **ls4-gw** コマンドを使います。
 
 ここでは次のような6台のノードからなるクラスタを構築します。MDSにはTokyo Tyrantを使い、デュアルマスタ構成とします。
 
@@ -59,28 +60,35 @@ ls4-standaloneを動かす
         node01                node02
         +----------+          +----------+
         | ttserver ------------ ttserver |
-        |          |          +----------+
-        |  ls4-cs  |
-        +----------+
+        |          |          |          |
+        |  ls4-cs  |          |          |
+        +----------+          +----------+
 
-     +- - - - - - - - +    +- - - - - - - - +
+     + - - - - - - - -+    + - - - - - - - -+
+     |                |    |                |
         node01                node02         
      |  +----------+  |    |  +----------+  |
-        |  ls4-ds  |          |  ls4-cs  |   
+        |  ls4-ds  |          |  ls4-ds  |   
      |  +----------+  |    |  +----------+  |
                                              
-     |  node01        |    |  node02        |    application server
+     |  node01        |    |  node02        |    アプリケーションサーバ
         +----------+          +----------+       +----------+
-     |  |  ls4-ds  |  |    |  |  ls4-cs  |  |    |  ls4-gw  |
+     |  |  ls4-ds  |  |    |  |  ls4-ds  |  |    |  ls4-gw  |
         +----------+          +----------+       +----------+
+     |                |    |                |
      + - - - - - - - -+    + - - - - - - - -+
-     replication-set 1     replication-set 2
+     レプリカセット 1
+                           レプリカセット2
+
+関連： :ref:`ja_arch`
 
 
 MDSの起動
 ^^^^^^^^^^^^^^^^^^^^^^
 
-まずTokyo Tyrantをデュアルマスタ構成で起動します。
+まず、Tokyo Tyrantをデュアルマスタ構成で起動します。Tokyo Tokyoにはメタデータが保存されます。
+
+データベースファイルの拡張子は *.tct* （テーブルデータベース）にします。
 
 ::
 
@@ -96,7 +104,9 @@ MDSの起動
 CSの起動
 ^^^^^^^^^^^^^^^^^^^^^^
 
-次にCSを起動します。
+次にCSを起動します。引数にはMDS（Tokyo Tyrant）のアドレスと、クラスタの状態を保存するディレクトリへのパスを指定します。
+
+ここではデュアルマスタ構成のTokyo Tyrantを使用するので、MDSのアドレスは *tt:<server1>--<server2>* とします。
 
 ::
 
@@ -104,38 +114,45 @@ CSの起動
     [on node01]$ mkdir /var/ls4/cs
     [on node01]$ ls4-cs --mds tt:node01--node02 -s /var/ls4/cs
 
+関連： :ref:`ja_plugin`
+
 DSの起動
 ^^^^^^^^^^^^^^^^^^^^^^
 
-DSを起動していきます。複数のDSで1つのレプリケーション･セットを構成します。
+DSを起動していきます。
+
+ここではID 1（rsid=1）とID 2（rsid=2）の2つのレプリカセットを、それぞれ2台のサーバ（[node03,node04], [node05,node06]）で構成します。
+
+引数には、CSのアドレス、一意なノードID、分かりやすいノード名、レプリカセットのID、そしてデータを保存するディレクトリへのパスを指定します：
 
 ::
 
-    # node03, node04: レプリケーション･セット1を構成
+    # node03, node04: レプリカセット1を構成
     [on node03]$ mkdir /var/ls4/node03
-    [on node03]$ ls4-ds --cs node01 --address node03 --nid 1 --rsid 1 \
-                           --name node03 -s /var/ls4/node03
+    [on node03]$ ls4-ds --cs node01 --address node03 --nid 1 --name node03 \
+                           --rsid 1 -s /var/ls4/node03
     
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --rsid 1 \
-                           --name node04 -s /var/ls4/node04
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --name node04 \
+                           --rsid 1 -s /var/ls4/node04
 
 ::
 
-    # node05, node06: レプリケーション･セット2を構成
+    # node05, node06: レプリカセット2を構成
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --rsid 2 \
-                           --name node05 -s /var/ls4/node05
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --name node05 \
+                           --rsid 2 -s /var/ls4/node05
     
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --rsid 2 \
-                           --name node06 -s /var/ls4/node06
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --name node06 \
+                           --rsid 2 -s /var/ls4/node06
 
+関連： :ref:`ja_command`
 
 GWの起動（オプショナル）
 ^^^^^^^^^^^^^^^^^^^^^^
 
-最後にGWを起動してます。DSもGWとして使うことができるので、GWの起動はオプショナルです。
+最後にGWを起動してます。DSもGWとして使うこともできます。
 
 ::
 
@@ -167,12 +184,17 @@ GWの起動（オプショナル）
     {"type":"png"}
     val1
 
-CSのIPアドレス
+次のステップ： :ref:`ja_operation`
+
+高度な構築手法
 ----------------------
 
-CS (Configuration Server) のIPアドレスは後から変更できないことに注意してください。そのIPアドレスがクラスタの識別子になるとも言えます。
+CSに専用のIPエイリアスを設定する
+^^^^^^^^^^^^^^^^^^^^^^
 
-サーバやNICが故障した場合に備えて、CSに専用のIPエイリアスを割り当てておくのは非常に良いアイディアです：
+CS (Configuration Server) のIPアドレスは、後から変更することができません。そのIPアドレスがクラスタの識別子になるとも言えます。
+
+サーバが故障したとき、替わりのIPアドレスを引き継ぐやすくするために、CSに専用のIPエイリアスを割り当てておくのは良いアイディアです：
 
 ::
 
@@ -180,5 +202,14 @@ CS (Configuration Server) のIPアドレスは後から変更できないこと�
     [on node01]$ ls4-cs --mds tt:node01--node02 -s /var/ls4/cs \
                            -l 192.168.0.254
 
-次のステップ： :ref:`ja_operation`
+Traffic Offloading
+^^^^^^^^^^^^^^^^^^^^^^
+
+→ :ref:`ja_howto_offload`
+
+
+Direct Data Transfer
+^^^^^^^^^^^^^^^^^^^^^^
+
+→ :ref:`ja_howto_ddt`
 

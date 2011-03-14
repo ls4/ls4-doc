@@ -51,7 +51,7 @@ LS4 consists of 4 kind of servers:
   CS (config server)
     CS manages cluster configuration. It also watches status of DSs and detaches crashed DSs automatically.
 
-Multiple DSs composes a group whose member stores same data. The group is called **replication-set**.
+Multiple DSs composes a group whose member stores same data. The group is called **replica-set**.
 
 ::
 
@@ -63,10 +63,10 @@ Multiple DSs composes a group whose member stores same data. The group is called
     |     MDS     |    |
     |      |      |  +----+   +----+   +----+
     |     MDS     |  | DS |   | DS |   | DS |
-    |      |      |  |    |   |    |   |    | Multiple DSs composes a replication-set.
-    |     MDS     |  | DS |   | DS |   | DS | DSs in a replication-set store same data.
+    |      |      |  |    |   |    |   |    | Multiple DSs composes a replica-set.
+    |     MDS     |  | DS |   | DS |   | DS | DSs in a replica-set store same data.
     +-------------+  |    |   |    |   |    |
-     MDSs store      | DS |   | DS |   | DS | ... You can add replication-sets at any time.
+     MDSs store      | DS |   | DS |   | DS | ... You can add replica-sets at any time.
      metadata.       +----+   +----+   +----+
                          \       |       /
                           -----  |  ----- CS manages cluster configuration.
@@ -81,7 +81,7 @@ Adding data
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Gateway (or aata server) relays requests from applications to metadata servers and data servers.
-Metadata servers store "which replication-set stores the data", and data servers store the data.
+Metadata servers store "which replica-set stores the data", and data servers store the data.
 
 ::
 
@@ -100,9 +100,9 @@ Metadata servers store "which replication-set stores the data", and data servers
                      +----+   +----+   +----+
 
 1. Application sends add request to a GW (gateway) or DS (data server). Any of GW or DS can respond to the requests.
-2. GW (or DS) selects a replication-set that stores the data and insert its ID to MDS (metadata server). Weighted round-robin algorithm is used to select the replication-set.
-3. GW (or DS) sends add request to a DS in the replication-set.
-4. Other DSs in the replication-set replicate the stored data.
+2. GW (or DS) selects a replica-set that stores the data and insert its ID to MDS (metadata server). Weighted round-robin algorithm is used to select the replica-set.
+3. GW (or DS) sends add request to a DS in the replica-set.
+4. Other DSs in the replica-set replicate the stored data.
 
 Related: :ref:`api`
 
@@ -110,7 +110,7 @@ Related: :ref:`api`
 Geting data
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Metadata servers know which replication-set stores the data. So gateway (or data server) sends query to metadata server first, and then get data from the data server.
+Metadata servers know which replica-set stores the data. So gateway (or data server) sends query to metadata server first, and then get data from the data server.
 
 ::
 
@@ -129,8 +129,8 @@ Metadata servers know which replication-set stores the data. So gateway (or data
                      +----+   +----+   +----+
 
 1. Application sends get request to a GW or DS. Any of GW or DS can respond to the requests.
-2. GW (or DS) sends search query to MDS. MDS returns ID of replication-set that has the requested data if it's found.
-3. GW (or DS) selects a DS from the replication-set, and sends get request to the DS. The DS is selected using location-aware algorithm
+2. GW (or DS) sends search query to MDS. MDS returns ID of replica-set that has the requested data if it's found.
+3. GW (or DS) selects a DS from the replica-set, and sends get request to the DS. The DS is selected using location-aware algorithm
 
 .. (TODO: See HowTo Geo-redundancy).
 
@@ -189,5 +189,5 @@ All data servers are registered on configuration server. Controling and monitori
 3. The control tool takes status or statistics from DSs and show them.
 
 
-Next step: :ref:`operation`
+Next step: :ref:`build`
 

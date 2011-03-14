@@ -77,7 +77,7 @@ ls4-ds: data server
         -n, --name NAME                  node name
         -a, --address ADDRESS[:PORT]     address of this node
         -l, --listen HOST[:PORT]         listen address
-        -g, --rsid IDs                   replication set IDs
+        -g, --rsid IDs                   replica-set IDs to join
         -L, --location STRING            location of this node
         -s, --store PATH                 path to storage directory
         -u, --ulog PATH                  path to update log directory
@@ -145,7 +145,7 @@ ls4ctl: control tool
        stat                         show statistics of nodes
        nodes                        show list of nodes
        remove_node <nid>            remove a node from the cluster
-       weight                       show list of replication sets
+       weight                       show list of replica-sets
        set_weight <rsid> <weight>   set distribution weight
        mds                          show MDS uri
        set_mds <URI>                set MDS uri
@@ -191,4 +191,24 @@ ls4top: monitoring tool like 'top'
 
     Usage: ls4top <cs address>
 
+
+ls4stat: status gathering tool for monitoring/visualization systems
+^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    Usage: ls4stat host[:port] [options] params...
+    params:
+        nid     address    name      rsid    location
+        state   time       uptime    pid     version
+        read    write      delete    items
+    default params:
+        nid address name read write delete time
+    options:
+        -a, --array                      print as arrays instead of a maps
+        -o, --only NID_OR_NAMES          get status of these servers only
+        -t, --tsv                        use Tab-Separated-Values format (default)
+        -j, --json                       use JSON format
+        -m, --msgpack                    use MessagePack format
+        -y, --yaml                       use YAML format
 

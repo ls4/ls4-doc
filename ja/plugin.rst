@@ -7,43 +7,55 @@
    :backlinks: none
    :local:
 
-ストレージプラグイン
-----------------------
+.. ストレージプラグイン
+.. ----------------------
+.. 
+.. DS (Data Server) の *--store* 引数にスキーマを指定することで、ストレージの実装を選択することができます。デフォルトはDirectory Storageです。
+.. 
+.. Directory Storage (dir:)
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. ディレクトリをストレージとして使用します。
+.. 
+.. スキーマは **dir:<path>** です。
 
-DS (Data Server) の *--store* 引数にスキーマを指定することで、ストレージの実装を選択することができます。デフォルトはDirectory Storageです。
 
-Directory Storage (dir:)
-^^^^^^^^^^^^^^^^^^^^^^
-
-ディレクトリをストレージとして使用します。
-
-スキーマは **dir:<path>** です。
-
+.. _ja_plugin_mds:
 
 MDSプラグイン
 ----------------------
 
-CS (Config Server) の *--mds* 引数にスキーマを指定することで、MDS (Metadata Server) の実装を選択することができます。デフォルトはTokyo Tyrantです。
+CS (Config Server) の *--mds* 引数に *スキーマ:式* の形式で指定することで、MDS (Metadata Server) の実装を選択することができます。デフォルトはTokyo Tyrantです。
 
 Tokyo Tyrant (tt:)
 ^^^^^^^^^^^^^^^^^^^^^^
 
-`Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ のテーブルデータベースをMDSとして使用します。
-バージョニングをサポートしています。
+MDSとして `Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ のテーブルデータベースを使用します。バージョニングをサポートしています。
 
-スキーマは **tt:<servers>[;<weights>]** です。
+単一サーバ構成、マスタ･スレーブ構成、またはデュアルマスタ構成を選択することができます。
+
+単一サーバ構成の場合は、 **tt:<server[:port]>** の形式で指定します。
+
+マスタ･スレーブ構成の場合は、 **host1[:port],host2[:port],...** のように、アドレスを **,** 区切りで指定します。さらに **host1:port,host2:port,...;weight1,weight2,...** のように **;** に続いて整数を ***,** 区切りで指定することで、参照に重みを指定することができます。
+
+例えばマスタサーバをhost1、スレーブをhost2とhost3で動作させ、参照はスレーブのみに2:1の割合で割り振るには、 **--mds tt:host1,host2,host3;0,2,1** と指定します。
+
+デュアルマスタ構成の場合は、 **host1[:port]--host2[:port]** のように、2台のサーバのアドレスを **--** で区切って指定します。
+
+例えばhost1とhost2の2台でデュアルマスタ構成とするには、 **--mds tt:host1--host2** と指定します。
 
 
 Memcache (mc:)
 ^^^^^^^^^^^^^^^^^^^^^^
 
-memcachedプロトコルをMDSとして使用します。
-バージョニングはサポートしていません。
+MDSとしてmemcachedプロトコルを使用します。バージョニングはサポートしていません。
 
-このプラグインはmemcachedプロトコルをサポートした永続的なストレージを使用することを意図しています。例えば `Kumofs <http://kumofs.sourceforge.net/>`_, `Flare <http://labs.gree.jp/Top/OpenSource/Flare-en.html>`_, `Membase <http://www.membase.org/>`_ などです。memcachedは使わないでください。
+このプラグインはmemcachedプロトコルをサポートした永続的なストレージを使用することを意図しています。例えば `Kumofs <http://kumofs.sourceforge.net/>`_, `Flare <http://labs.gree.jp/Top/OpenSource/Flare-en.html>`_, `Membase <http://www.membase.org/>`_ などです。memcachedは使用できません。
 
-スキーマは **mc:<servers>[;<weights>]** です。
+スキーマは **mc:host[:port]** です。
 
+
+.. _ja_plugin_mds_cache:
 
 MDSキャッシュプラグイン
 ----------------------
@@ -53,9 +65,12 @@ GW (Gateway) または DS (Data Server) に *--mds-cache* 引数を指定する�
 Memcached (mc:)
 ^^^^^^^^^^^^^^^^^^^^^^
 
-`memcached <http://memcached.org/>`_ をMDSキャッシュとして使用します。memcachedの代わりに `Kyoto Tycoon <http://fallabs.com/kyototycoon/>`_ を使用することもできます。
+MDSキャッシュとして `memcached <http://memcached.org/>`_ を使用します。memcachedの代わりに `Kyoto Tycoon <http://fallabs.com/kyototycoon/>`_ を使用することもできます。
 
-スキーマは **mc:<servers>[;<expire>]** です。
+サーバの一覧は、 **mc:<servers>[;<expire>]** の形式で指定します。サーバの一覧は **,** 区切りで指定し、キャッシュの有効期間（秒）を **;** に続いて整数で指定します。
+デフォルトのキャッシュの有効期間は1日（86400秒）です。
+
+例えばhost1,host2,host3の3台を使用し、キャッシュの有効期間を1時間とするには、 **--mds-cache mc:host1,host2,host3;3600** と指定します。
 
 
 Local memory (lcoal:)
@@ -64,7 +79,9 @@ Local memory (lcoal:)
 ローカルメモリをMDSキャッシュとして使用します。
 キャッシュは共有されないので、更新系のAPIは一貫性の問題を引き起こすかもしれません。
 
-スキーマは **local:<size>** です。
+スキーマは **local:<size>** です。 *size* には "k"、"m"、"g" などの接尾辞を指定することができます。
+
+例えば32MBのローカルメモリをMDSキャッシュとして使用するには、 **--mds-cache local:32m** と指定します。
 
 
 次のステップ： :ref:`ja_devel`

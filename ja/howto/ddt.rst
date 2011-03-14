@@ -151,42 +151,7 @@ DSの設定
 
 あるいは、 *--http-redirect-port PORT* 引数を指定して、別のHTTPサーバを使ってデータを転送します。
 
-
-GETリクエストをオフロードしてDSの性能を向上させる
-^^^^^^^^^^^^^^^
-
-DSはRubyで書かれており、動作は低速です。別のHTTPサーバ（nginxやlighttpd、thttpdなど）を使ってGETリクエストを処理することで、性能を向上させることができます。
-
-thttpdを使う
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-::
-
-    [on node04]$ thttpd -p 19800 -d /var/ls4/node04/data
-
-nginxを使う
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-::
-
-    server {
-      listen 19800;
-      server_name localhost;
-      sendfile on;
-      location / {
-        root /var/ls4/node04/data;
-      }
-    }
-
-DSの設定
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-.. TODO
-
-::
-
-    [on node04]$ ls4-ds --cs cs.node --address node04 --nid N --rsid R --name N \
-                           -s /var/ls4/node04 \
-                           --http-redirect-port 19800
+関連： :ref:`ja_howto_offload`
 
 
 References

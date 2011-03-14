@@ -53,7 +53,7 @@
     |   +-- okey.rb             Definition of the ObjectKey class
     |   +-- tsv_data.rb         Base class to use tab separated values
     |   +-- fault_detector.rb   Fault detector
-    |   +-- membership.rb       Node list and replication-set list
+    |   +-- membership.rb       Node list and replica-set list
     |   +-- weight.rb           Load balancing feature
     |
     +-- service/

@@ -66,14 +66,16 @@ LS4を実行するには次のソフトウェアが必要です：
 
 以下のコマンドがインストールされます：
 
-  - ls4ctl: 管理ツール
-  - ls4cli: コマンドラインクライアント
-  - ls4rpc: RPCコマンドラインクライアント
-  - ls4top: 'top'風の監視ツール
-  - ls4-cs: CSサーバプログラム
-  - ls4-ds: DSサーバプログラム
-  - ls4-gw: GWサーバプログラム
-  - ls4-standalone: スタンドアロンサーバプログラム
+  - :ref:`ja_command_ctl`
+  - :ref:`ja_command_cmd`
+  - :ref:`ja_command_rpc`
+  - :ref:`ja_command_top`
+  - :ref:`ja_command_stat`
+  - :ref:`ja_command_cs`
+  - :ref:`ja_command_ds`
+  - :ref:`ja_command_gw`
+  - :ref:`ja_command_standalone`
+
 
 方法3：専用のRuby 1.9をインストールする
 ----------------------

@@ -36,7 +36,7 @@ You can try to use LS4 on single host as follows:
     #      --cs (address of CS)
     #      --address (address of this node)
     #      --nid (unique node ID)
-    #      --rsid (ID of replication-set to join)
+    #      --rsid (ID of replica-set to join)
     #      --name (human-friendly node name)
     #      --store (storage path)
     [localhost]$ mkdir data-ds0
@@ -102,7 +102,7 @@ It runs runs 6-node cluster in following tutorial:
         |  MDS --------------- MDS  |
         |      |      \      +------+
         |  CS  |       \
-        +------+        --- Dual-master replication
+        +------+        --- Dual-master replica-set
     
      +- - - - - - +       +- - - - - - +
      |   node03   |       |   node05   |
@@ -115,7 +115,7 @@ It runs runs 6-node cluster in following tutorial:
         |  DS  |             |  DS  |   
      |  +------+  |       |  +------+  |
      +------------+       +------------+
-    replication-set 0    replication-set 1
+     replica-set 0         replica-set 1
 
 ::
 
@@ -132,22 +132,22 @@ It runs runs 6-node cluster in following tutorial:
     [on node01]$ mkdir /var/ls4/cs
     [on node01]$ ls4-cs --mds tt:node01--node02 -s /var/ls4/cs
     
-    # node03: runs DS for replication-set 0.
+    # node03: runs DS for replica-set 0.
     [on node03]$ mkdir /var/ls4/node03
     [on node03]$ ls4-ds --cs node01 --address node03 --nid 0 --rsid 0 \
                            --name node03 -s /var/ls4/node03
     
-    # node04: runs DS for replication-set 0.
+    # node04: runs DS for replica-set 0.
     [on node04]$ mkdir /var/ls4/node04
     [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --rsid 0 \
                            --name node04 -s /var/ls4/node04
     
-    # node05: runs DS for replication-set 1.
+    # node05: runs DS for replica-set 1.
     [on node05]$ mkdir /var/ls4/node05
     [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --rsid 1 \
                            --name node05 -s /var/ls4/node05
     
-    # node06: runs DS for replication-set 1.
+    # node06: runs DS for replica-set 1.
     [on node06]$ mkdir /var/ls4/node06
     [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --rsid 1 \
                            --name node06 -s /var/ls4/node06

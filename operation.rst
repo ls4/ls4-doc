@@ -12,10 +12,10 @@ Operation and Management
 Adding data servers
 ----------------------
 
-Creating a new replication-set
+Creating a new replica-set
 ^^^^^^^^^^^^^^^^^^^^^^
 
-By creating new replication-set, both storage capacity and I/O performance grow.
+By creating new replica-set, both storage capacity and I/O performance grow.
 
 First of all, confirm current status of the cluster:
 
@@ -28,8 +28,8 @@ First of all, confirm current status of the cluster:
       2          node05       192.168.0.15:18900      subnet-192.168.000       1     active
       3          node06       192.168.0.16:18900      subnet-192.168.000       1     active
 
-Prepare 2 or more servers for the new replication-set and run ls4-ds command on the servers.
-In this process, we'll create replication-set (ID=2) with 2 servers named "node07" and "node08":
+Prepare 2 or more servers for the new replica-set and run ls4-ds command on the servers.
+In this process, we'll create replica-set (ID=2) with 2 servers named "node07" and "node08":
 
 ::
 
@@ -54,13 +54,13 @@ Finally, confirm the status of the cluster:
       4          node07       192.168.0.17:18900      subnet-192.168.000       2     active
       5          node08       192.168.0.18:18900      subnet-192.168.000       2     active
 
-See: Changing weight of replication-sets
+See: Changing weight of replica-sets
 
 
-Adding a server to existing replication-set
+Adding a server to existing replica-set
 ^^^^^^^^^^^^^^^^^^^^^^
 
-By adding a server to existing replication-set, you can raise availability and read performance of the replication-set.
+By adding a server to existing replica-set, you can raise availability and read performance of the replica-set.
 
 First of all, confirm current status of the cluster:
 
@@ -73,9 +73,9 @@ First of all, confirm current status of the cluster:
       2          node05       192.168.0.15:18900      subnet-192.168.000       1     active
       3          node06       192.168.0.16:18900      subnet-192.168.000       1     active
 
-In this process, we'll add a server to replication-set whose ID is 0.
+In this process, we'll add a server to replica-set whose ID is 0.
 
-Prepare new server and copy existing data from other server on the replication-set using rsync.
+Prepare new server and copy existing data from other server on the replica-set using rsync.
 
 ::
 
@@ -120,7 +120,7 @@ Finally, confirm the status of the cluster:
 Removing a data server
 ----------------------
 
-You can remove data servers from a replication-set. Note that you can't remove replication-sets.
+You can remove data servers from a replica-set. Note that you can't remove replica-sets.
 
 First of all, confirm current status of the cluster:
 
@@ -167,7 +167,7 @@ Finally, confirm the status of the cluster:
       3          node06       192.168.0.16:18900      subnet-192.168.000       1     active
 
 
-Changing weight of replication-sets
+Changing weight of replica-sets
 ----------------------
 
 .. TODO
