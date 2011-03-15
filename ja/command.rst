@@ -290,7 +290,7 @@ ls4-standaloneは、単一のプロセスでサーバ機能を提供するプロ
             --trace                      デバッグメッセージとトレースメッセージを表示する
             --color-log                  強制的にログに色を付ける
 
-.. TODO
+.. TODO ls4-standalone
 
 
 .. _ja_command_ctl:
@@ -351,7 +351,7 @@ ls4cmd: コマンドラインクライアント
        deletev <vname> <key>               delete the data and attributes using the version name
        remove <key>                        remove the data and attributes
 
-.. TODO
+.. TODO ls4cmd
 
 
 .. _ja_command_rpc:
@@ -393,7 +393,7 @@ sキーを押すと、標準モード/短縮モードの2つの表示方法を�
 
 .. _ja_command_stat:
 
-ls3stat: 監視/可視化システム向けの状態収集ツール
+ls4stat: 監視/可視化システム向けの状態収集ツール
 ----------------------
 
 ::
@@ -413,7 +413,7 @@ ls3stat: 監視/可視化システム向けの状態収集ツール
         -m, --msgpack                    結果の表示にMessagePack形式を使う
         -y, --yaml                       結果の表示にYAML形式を使う
 
-ls3statは、NagiosやMUNINなどの監視/可視化システム向けの情報収集ツールです。様々な書式で統計情報を表示することができます。
+ls4statは、NagiosやMUNINなどの監視/可視化システム向けの情報収集ツールです。様々な書式で統計情報を表示することができます。
 
 第一引数には、CSのアドレスとポート番号を指定します。
 

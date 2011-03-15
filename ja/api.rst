@@ -7,6 +7,8 @@ API リファレンス
    :backlinks: none
    :local:
 
+.. _ja_api_http:
+
 HTTP API
 ----------------------
 
@@ -234,6 +236,8 @@ GET /api/url?key=<key> と似ていますが、オブジェクトが実際に見
 
 関連： :ref:`ja_howto_ddt`
 
+
+.. _ja_api_rpc:
 
 MessagePack-RPC API
 ----------------------

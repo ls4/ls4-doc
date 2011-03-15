@@ -3,6 +3,8 @@
 プラグイン
 ==================================
 
+LS4はプログラム全体でプラグイン型のアーキテクチャを採用しています。ここではそれらのプラグインを切り替えて使用する方法について述べます。
+
 .. contents::
    :backlinks: none
    :local:
@@ -37,12 +39,10 @@ MDSとして `Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ のテーブル�
 単一サーバ構成の場合は、 **tt:<server[:port]>** の形式で指定します。
 
 マスタ･スレーブ構成の場合は、 **host1[:port],host2[:port],...** のように、アドレスを **,** 区切りで指定します。さらに **host1:port,host2:port,...;weight1,weight2,...** のように **;** に続いて整数を ***,** 区切りで指定することで、参照に重みを指定することができます。
-
-例えばマスタサーバをhost1、スレーブをhost2とhost3で動作させ、参照はスレーブのみに2:1の割合で割り振るには、 **--mds tt:host1,host2,host3;0,2,1** と指定します。
+例えば、マスタサーバをhost1、スレーブをhost2とhost3で動作させ、参照はスレーブのみに2:1の割合で割り振るには、 **--mds tt:host1,host2,host3;0,2,1** と指定します。
 
 デュアルマスタ構成の場合は、 **host1[:port]--host2[:port]** のように、2台のサーバのアドレスを **--** で区切って指定します。
-
-例えばhost1とhost2の2台でデュアルマスタ構成とするには、 **--mds tt:host1--host2** と指定します。
+例えば、host1とhost2の2台でデュアルマスタ構成とするには、 **--mds tt:host1--host2** と指定します。
 
 
 Memcache (mc:)
@@ -50,9 +50,9 @@ Memcache (mc:)
 
 MDSとしてmemcachedプロトコルを使用します。バージョニングはサポートしていません。
 
-このプラグインはmemcachedプロトコルをサポートした永続的なストレージを使用することを意図しています。例えば `Kumofs <http://kumofs.sourceforge.net/>`_, `Flare <http://labs.gree.jp/Top/OpenSource/Flare-en.html>`_, `Membase <http://www.membase.org/>`_ などです。memcachedは使用できません。
+このプラグインはmemcachedプロトコルをサポートした永続的なデータストアを使用することを意図しています。例えば `Kumofs <http://kumofs.sourceforge.net/>`_, `Flare <http://labs.gree.jp/Top/OpenSource/Flare-en.html>`_, `Membase <http://www.membase.org/>`_ などです。memcachedは使用できません。
 
-スキーマは **mc:host[:port]** です。
+スキーマは **mc:host[:port]** です。デフォルトのポート番号は11211です。
 
 
 .. _ja_plugin_mds_cache:
