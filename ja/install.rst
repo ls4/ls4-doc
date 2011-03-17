@@ -96,8 +96,8 @@ LS4を実行するには次のソフトウェアが必要です：
 
     # ruby-1.9 を /opt/local/ls4 にインストールする
     $ wget ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p136.tar.bz2
-    $ tar jxvf ruby-1.9.2-p0.tar.bz2
-    $ cd ruby-1.9.2
+    $ tar jxvf ruby-1.9.2-p136.tar.bz2
+    $ cd ruby-1.9.2-p136
     $ ./configure --prefix=/opt/local/ls4
     $ make
     $ sudo make install

@@ -277,7 +277,7 @@ read(key:Raw, offset:Integer, size:Integer) -> data:Raw
 gett(vtime:Integer, key:Raw) -> (data:Raw, attributes:Map<Raw,Raw>)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-時刻を指定して、オブジェクトのデータを取得します。指定した時刻以前に作成された最新のバージョンを返します。
+時刻を指定して、オブジェクトのデータと属性を取得します。指定した時刻以前に作成された最新のバージョンを返します。
 
 
 gett_data(vtime:Integer, key:Raw) -> data:Raw
@@ -373,7 +373,7 @@ deletev(vname:Raw, key:Raw) -> deleted:Boolean
 remove(key:Raw) -> removed:Boolean
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-オブジェクトを削除します。delete(key) と似ていますが、
+オブジェクトを削除します。 *delete(key)* と似ていますが、MDSがバージョニングをサポートしている場合、オブジェクトの実体は削除せずに残します。残されたオブジェクトは時刻やバージョン名を指定した取得APIを使って取得することができます。
 
 
 上書き更新API
@@ -391,7 +391,7 @@ update_attrs(key:Raw, attributes:Map<Raw,Raw>) -> objectKey:Object
 getd_data(objectKey:Object) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-MDSに問い合わせをせずに、データを取得します。MDSがバージョニングをサポートしている場合、実際のデータは削除せずに残します。
+MDSに問い合わせをせずに、データを取得します。
 
 
 readd(objectKey:Object, offset:Integer, size:Integer) -> data:Raw

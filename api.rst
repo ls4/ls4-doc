@@ -7,8 +7,10 @@ API Reference
    :backlinks: none
    :local:
 
+.. _api_http:
+
 HTTP API
---------
+----------------------
 
 /data/<key>
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -237,6 +239,8 @@ This is similar to *GET /api/url?key=<key>*, but this returns status code *302 F
 Related: :ref:`howto_ddt`
 
 
+.. _api_rpc:
+
 MessagePack-RPC API
 ----------------------
 
@@ -275,27 +279,57 @@ Getting specific version API
 gett(vtime:Integer, key:Raw) -> (data:Raw, attributes:Map<Raw,Raw>)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Gets data and attributes of the object by specifying the creation time.
+It returns the latest object created before the time.
+
+
 gett_data(vtime:Integer, key:Raw) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Gets data of the object by specifying the creation time.
+It returns the latest object created before the time.
+
 
 gett_attrs(vtime:Integer, key:Raw) -> attributes:Map<Raw,Raw>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Gets attributes of the object by specifying the creation time.
+It returns the latest object created before the time.
+
+
 readt(vtime:Integer, key:Raw, offset:Integer, size:Integer) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Gets a part of data of the object by specifying the creation time.
+It returns the latest object created before the time.
 
 
 getv(vname:Raw, key:Raw) -> (data:Raw, attributes:Map<Raw,Raw>)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Gets data and attributes of the object by specifying the version name.
+It returns the object whose version name is same.
+
+
 getv_data(vname:Raw, key:Raw) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Gets data of the object by specifying the version name.
+It returns the object whose version name is same.
+
 
 getv_attrs(vname:Raw, key:Raw) -> attributes:Map<Raw,Raw>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Gets attributes of the object by specifying the version name.
+It returns the object whose version name is same.
+
+
 readv(vname:Raw, key:Raw, offset:Integer, size:Integer) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Gets a part of data of the object by specifying the version name.
+It returns the object whose version name is same.
 
 
 Adding API
@@ -304,14 +338,25 @@ Adding API
 add(key:Raw, data:Raw, attributes:Map<Raw,Raw>) -> objectKey:Object
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Adds a object. The version name is empty.
+
+
 add_data(key:Raw, data:Raw) -> objectKey:Object
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Adds a object. The attributes are empty. The version name is empty.
+
 
 addv(vname:Raw, key:Raw, data:Raw, attributes:Map<Raw,Raw>) -> objectKey:Object
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Adds a object with version name.
+
+
 addv_data(vname:Raw, key:Raw, data:Raw) -> objectKey:Object
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Adds a object with version name. The attributes are empty.
 
 
 Deleting API
@@ -320,14 +365,25 @@ Deleting API
 delete(key:Raw) -> deleted:Boolean
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Deletes an object.
+
+
 deletet(vtime:Integer, key:Raw) -> deleted:Boolean
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Deletes an object by specifying the creation time.
+
 
 deletev(vname:Raw, key:Raw) -> deleted:Boolean
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Deletes an object by specifying the version name.
+
+
 remove(key:Raw) -> removed:Boolean
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Deletes an object. This is similar to *delete(key)*, but this doesn't delete the substance of the object if MDS supports versioning. You can get these objects by specifying creation time or version name.
 
 
 In-place updating API
@@ -336,6 +392,8 @@ In-place updating API
 update_attrs(key:Raw, attributes:Map<Raw,Raw>) -> objectKey:Object
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Overwrites the attributes of the object.
+
 
 Direct getting API
 ^^^^^^^^^^^^^^^
@@ -343,6 +401,11 @@ Direct getting API
 getd_data(objectKey:Object) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+Gets data of the object without sending queries to MDS.
+
+
 readd(objectKey:Object, offset:Integer, size:Integer) -> data:Raw
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+Gets a part of data of the object without sending queries to MDS.
 

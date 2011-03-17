@@ -95,7 +95,7 @@ Following procedure installs Ruby and LS4:
     # Installs ruby-1.9 into /opt/local/ls4
     $ wget ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p136.tar.bz2
     $ tar jxvf ruby-1.9.2-p136.tar.bz2
-    $ cd ruby-1.9.2
+    $ cd ruby-1.9.2-p136
     $ ./configure --prefix=/opt/local/ls4
     $ make
     $ sudo make install

@@ -9,117 +9,89 @@ It describes how to construct the LS4 cluster in this document.
    :backlinks: none
    :local:
 
-Running on single host
+Running on single host (stand-alone)
 ----------------------
 
-.. TODO: ls4-standalone command
+You can try LS4 on single host using **ls4-standalone** command. It starts stand-alone server.
 
-You can try to use LS4 on single host as follows:
-
-::
-
-    # 1. Runs metadata server (Tokyo Tyrant).
-    #    It runs single node in this tutorial.
-    [localhost]$ ttserver mds.tct &
+Set *-s* option for the path to store data. You can set *-t* option to use HTTP clients for reading/wrting objects:
 
 ::
 
-    # 2. Runs configuration server (CS).
-    #    CS requires --mds (address of MDS) option and -s (configuration directory) option.
-    [localhost]$ mkdir data-cs
-    [localhost]$ ls4-cs --mds 127.0.0.1 -s ./data-cs &
+    $ ls4-standalone -s ./data -t 18080
+
+It is prepared to use LS4. Use the command-line client *ls4cmd* to confirm the workings of the server:
 
 ::
 
-    # 3. Runs data server (DS).
-    #    DS requires following options:
-    #      --cs (address of CS)
-    #      --address (address of this node)
-    #      --nid (unique node ID)
-    #      --rsid (ID of replica-set to join)
-    #      --name (human-friendly node name)
-    #      --store (storage path)
-    [localhost]$ mkdir data-ds0
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18900 --nid 0 --rsid 0 \
-                           --name ds0 --store ./data-ds0 &
+    $ ls4cmd add_data key1 val1
+    $ ls4cmd get_data key1
+    val1
 
-    # 4. Runs data servers...
-    [localhost]$ mkdir data-ds1
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18901 --nid 1 --rsid 0 \
-                           --name ds1 --store ./data-ds1 &
-
-    [localhost]$ mkdir data-ds2
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18902 --nid 2 --rsid 1 \
-                           --name ds2 --store ./data-ds2 &
-
-    [localhost]$ mkdir data-ds3
-    [localhost]$ ls4-ds --cs 127.0.0.1 --address 127.0.0.1:18903 --nid 3 --rsid 1 \
-                           --name ds3 --store ./data-ds3 --http 18080 &
-
-    # Use --http (port) option to accept HTTP client.
-
-Confirm status of the cluster using *ls4ctl* command.
+You can use HTTP clients to read/write data:
 
 ::
 
-    [localhost] $ ls4ctl localhost nodes
-    nid            name                 address                location    rsid      state
-      0             ds0         127.0.0.1:18900      subnet-127.000.000       0     active
-      1             ds1         127.0.0.1:18901      subnet-127.000.000       0     active
-      2             ds2         127.0.0.1:18902      subnet-127.000.000       1     active
-      3             ds3         127.0.0.1:18903      subnet-127.000.000       1     active
-
-It is prepared to use LS4 with HTTP client.
-
-::
-
-    [localhost]$ curl -X POST -d 'data=value1&attrs={"test":"attr"}' http://localhost:18080/data/key1
+    $ curl -X POST -d 'data=value1&attrs={"test":"attr"}' http://localhost:18080/data/key1
     
-    [localhost]$ curl -X GET http://localhost:18080/data/key1
+    $ curl -X GET http://localhost:18080/data/key1
     value1
     
-    [localhost]$ curl -X GET http://localhost:18080/attrs/key1
+    $ curl -X GET http://localhost:18080/attrs/key1
     {"test":"attr"}
     
-    [localhost]$ curl -X GET -d 'format=tsv' http://localhost:18080/attrs/key1
+    $ curl -X GET -d 'format=tsv' http://localhost:18080/attrs/key1
     test	attr
-
 
 Related: :ref:`api`
 
 Related: :ref:`command`
 
 
-Running on cluster
+Running a cluster
 ----------------------
 
-It runs runs 6-node cluster in following tutorial:
+Use **ls4-cs**, **ls4-ds** and **ls4-gw** commands to build cluster with multiple servers.
+
+It runs runs 6-node cluster in this tutorial. It uses Tokyo Tyrant for the metadata server (MDS) as a dual-master composition.
 
 ::
 
-         node01               node02
-        +------+             +------+
-        |  MDS --------------- MDS  |
-        |      |      \      +------+
-        |  CS  |       \
-        +------+        --- Dual-master replica-set
-    
-     +- - - - - - +       +- - - - - - +
-     |   node03   |       |   node05   |
-        +------+             +------+
-     |  |  DS  |  |       |  |  DS  |  |
-        +------+             +------+   
-     |            |       |            |
-         node04               node06    
-     |  +------+  |       |  +------+  |
-        |  DS  |             |  DS  |   
-     |  +------+  |       |  +------+  |
-     +------------+       +------------+
-     replica-set 0         replica-set 1
+        node01                node02
+        +----------+          +----------+
+        | ttserver ------------ ttserver |
+        |          |          |          |
+        |  ls4-cs  |          |          |
+        +----------+          +----------+
+
+     + - - - - - - - -+    + - - - - - - - -+
+     |                |    |                |
+        node01                node02         
+     |  +----------+  |    |  +----------+  |
+        |  ls4-ds  |          |  ls4-ds  |   
+     |  +----------+  |    |  +----------+  |
+                                             
+     |  node01        |    |  node02        |    application server
+        +----------+          +----------+       +----------+
+     |  |  ls4-ds  |  |    |  |  ls4-ds  |  |    |  ls4-gw  |
+        +----------+          +----------+       +----------+
+     |                |    |                |
+     + - - - - - - - -+    + - - - - - - - -+
+     replica-set 1         replica-set 2
+
+Related: :ref:`arch`
+
+
+Running the MDS
+^^^^^^^^^^^^^^^^^^^^^^
+
+First, run Tokyo Tyrant as a dual-msater composition. Tokyo Tyrant stores metadata.
+
+Use *.tct* (means table database) for the suffix of the database file.
 
 ::
 
-    # node01 and node02: run two Tokyo Tyrant servers as dual-master.
+    # node01 and node02 run Tokyo Tyrant as a dual-master composition
     [on node01]$ mkdir /var/ls4/mds1
     [on node01]$ ttserver /var/ls4/mds1/db.tct -ulog /var/ls4/mds1/ulog -sid 1 \
                           -mhost node02 -rts /var/ls4/mds1/node02.rts
@@ -127,46 +99,82 @@ It runs runs 6-node cluster in following tutorial:
     [on node02]$ mkdir /var/ls4/mds2
     [on node02]$ ttserver /var/ls4/mds2/db.tct -ulog /var/ls4/mds2/ulog -sid 2 \
                           -mhost node01 -rts /var/ls4/mds2/node01.rts
-    
-    # node01: runs CS.
+
+
+Running a CS
+^^^^^^^^^^^^^^^^^^^^^^
+
+Second, run a configuration server (CS). CS requires the address of the MDS and the path to the directry to store state of the cluster.
+
+::
+
+    # node01 runs a CS
     [on node01]$ mkdir /var/ls4/cs
     [on node01]$ ls4-cs --mds tt:node01--node02 -s /var/ls4/cs
-    
-    # node03: runs DS for replica-set 0.
+
+Related: :ref:`plugin`
+
+
+Running DSs
+^^^^^^^^^^^^^^^^^^^^^^
+
+Next, run data servers (DS).
+
+It build two replica-sets: ID 1 (rsid=1) and ID 2 (rsid=2). Each sets consists of two servers ([node03,node04], [node05,node06]).
+
+DS requires the address of the CS, an unique node ID, human-readable node name, ID of the replica-set and path to the directry to store data:
+
+::
+
+    # node03 and node04 compose replica-set 1
     [on node03]$ mkdir /var/ls4/node03
-    [on node03]$ ls4-ds --cs node01 --address node03 --nid 0 --rsid 0 \
-                           --name node03 -s /var/ls4/node03
+    [on node03]$ ls4-ds --cs node01 --address node03 --nid 1 --name node03 \
+                           --rsid 1 -s /var/ls4/node03
     
-    # node04: runs DS for replica-set 0.
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --rsid 0 \
-                           --name node04 -s /var/ls4/node04
-    
-    # node05: runs DS for replica-set 1.
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --name node04 \
+                           --rsid 1 -s /var/ls4/node04
+
+::
+
+    # node05 and node06 compose replica-set 2
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --rsid 1 \
-                           --name node05 -s /var/ls4/node05
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --name node05 \
+                           --rsid 2 -s /var/ls4/node05
     
-    # node06: runs DS for replica-set 1.
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --rsid 1 \
-                           --name node06 -s /var/ls4/node06
-    
-    # on application server: runs a GW.
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --name node06 \
+                           --rsid 2 -s /var/ls4/node06
+
+Related: :ref:`command`
+
+
+Running GWs (Optional)
+^^^^^^^^^^^^^^^^^^^^^^
+
+Finally, run gateways (GW). You can use DS as the GW.
+
+::
+
+    # application server runs a GW
     [on app-svr]$ ls4-gw --cs node01 --port 18800 --http 18080
 
-Confirm status of the cluster using *ls4ctl* command.
+
+Ronfirming the status
+^^^^^^^^^^^^^^^^^^^^^^
+
+Now the cluster is running and prepared to use. Use *ls4ctl* command to confirm the status:
 
 ::
 
     $ ls4ctl node01 nodes
     nid            name                 address                location    rsid      state
-      0          node03       192.168.0.13:18900      subnet-192.168.000       0     active
-      1          node04       192.168.0.14:18900      subnet-192.168.000       0     active
-      2          node05       192.168.0.15:18900      subnet-192.168.000       1     active
-      3          node06       192.168.0.16:18900      subnet-192.168.000       1     active
+      0          node03       192.168.0.13:18900      subnet-192.168.000       1     active
+      1          node04       192.168.0.14:18900      subnet-192.168.000       1     active
+      2          node05       192.168.0.15:18900      subnet-192.168.000       2     active
+      3          node06       192.168.0.16:18900      subnet-192.168.000       2     active
 
-Now the cluster is active. Try to set and get using http client, or *ls4cmd* command as follows:
+Try to write and read data using http client, or *ls4cmd* command as follows:
 
 ::
 
@@ -177,16 +185,34 @@ Now the cluster is active. Try to set and get using http client, or *ls4cmd* com
     {"type":"png"}
     val1
 
-Note that you can't change the IP address of the configuration server.
-In other words, the address becomes identifier of a cluster.
+Next step: :ref:`operation`
 
-It is good idea to set exclusive IP alias for the address:
+
+Advanced Techniques
+----------------------
+
+.. _build_ipalias:
+
+Assigning exclusive IP alias for the CS
+^^^^^^^^^^^^^^^^^^^^^^
+
+You can't change the IP address of the configuration server. In other words, the address becomes identifier of the cluster.
+
+It is good idea to assign exclusive IP alias for the CS to make it easy for the substitute server to take over the address:
 
 ::
 
     [on node01]$ ifconfig eth0:0 192.168.0.254
     [on node01]$ ls4-cs --mds tt:node01--node02 -s /var/ls4/cs \
-                           -l 192.168.0.254
+                        -l 192.168.0.254
 
-Next step:  :ref:`operation`
+Traffic Offloading
+^^^^^^^^^^^^^^^^^^^^^^
+
+-> :ref:`howto_offload`
+
+Direct Data Transfer
+^^^^^^^^^^^^^^^^^^^^^^
+
+-> :ref:`howto_ddt`
 

@@ -22,9 +22,37 @@ Debugging and Improvement
 .. ----------------------
 
 
-Source codes
-----------------------
+.. Improving LS4
+.. ----------------------
+.. 
+.. Writing storage engine
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Writing MDS engine
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Writing update log engine
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Writing master node selector
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Writing load-balancing engine
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Adding statics item
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Adding MessagePack-RPC API
+.. ^^^^^^^^^^^^^^^^^^^^^^
+.. 
+.. Adding HTTP API
+.. ^^^^^^^^^^^^^^^^^^^^^^
 
+
+.. Source codes
+.. ----------------------
+.. 
 .. Asynchronous communication using MessagePack-RPC
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
@@ -126,31 +154,4 @@ Source tree
     |
     +-- version.rb
 
-
-.. Improving LS4
-.. ----------------------
-.. 
-.. Writing storage engine
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Writing MDS engine
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Writing update log engine
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Writing master node selector
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Writing load-balancing engine
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Adding statics item
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Adding MessagePack-RPC API
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Adding HTTP API
-.. ^^^^^^^^^^^^^^^^^^^^^^
 

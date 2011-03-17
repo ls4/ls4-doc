@@ -18,28 +18,28 @@ It assumes following web backend system in this document:
                              load balancer
                               /
                        reverse proxy
-                         | (1)
-                         | (5)
+                       (1) /
+                      (5) /
                         App
            (3)       (2) |
             ----------- GW
-           /            /
-    +-------------+    |
-    |             |    | (4)
-    |             |  +----+   +----+   +----+
-    |     MDS     |  | DS |   | DS |   | DS |
-    |             |  |    |   |    |   |    |
-    |             |  | DS |   | DS |   | DS |
-    +-------------+  |    |   |    |   |    |
-                     | DS |   | DS |   | DS |
-                     +----+   +----+   +----+
+           /            |
+    +-------------+  (4)|
+    |             |     |
+    |             |   +-|--+   +----+   +----+
+    |     MDS     |   | DS |   | DS |   | DS |
+    |             |   |    |   |    |   |    |
+    |             |   | DS |   | DS |   | DS |
+    +-------------+   |    |   |    |   |    |
+                      | DS |   | DS |   | DS |
+                      +----+   +----+   +----+
+
 
 1. Reverse proxy relays requests to the application server.
 2. Application sends a request to gateway (GW) to get data.
 3. GW sends a query to metadata server (MDS).
 4. GW gets large data from appropriate DS.
 5. Application returns large data to reverse proxy.
-
 
 You can reduce CPU load and network traffic by setting up following architecture described in this document:
 
@@ -50,21 +50,21 @@ You can reduce CPU load and network traffic by setting up following architecture
                              load balancer
                               /
                        reverse proxy (nginx)
-                       (4) / |
-                      (1) /  |
+                       (1) / |
+                      (5) /  |
                         App  |
-           (3)       (2) |   |
-            ----------- GW   | (5)
-           /                /
-    +-------------+      ---
-    |             |     /
-    |             |  +----+   +----+   +----+
-    |     MDS     |  | DS |   | DS |   | DS |
-    |             |  |    |   |    |   |    |
-    |             |  | DS |   | DS |   | DS |
-    +-------------+  |    |   |    |   |    |
-                     | DS |   | DS |   | DS |
-                     +----+   +----+   +----+
+           (3)       (2) |   | (6)
+            ----------- GW   |
+           /            |   /
+    +-------------+  (4)|  /
+    |             |     | /
+    |             |   +-||-+   +----+   +----+
+    |     MDS     |   | DS |   | DS |   | DS |
+    |             |   |    |   |    |   |    |
+    |             |   | DS |   | DS |   | DS |
+    +-------------+   |    |   |    |   |    |
+                      | DS |   | DS |   | DS |
+                      +----+   +----+   +----+
 
 1. Reverse proxy (nginx) relays requests to the application server.
 2. Application sends a request to gateway (GW) to get actual URL of the data on a DS.
@@ -152,41 +152,7 @@ HTTP interface must be enabled on all DSs by *--http PORT* option.
 
 Or you can use *--http-redirect-port PORT* option to return actual data using another HTTP server.
 
-
-Accelerating DS performance by offloading GET requests
-^^^^^^^^^^^^^^^
-
-DS is written in Ruby and relatively slow. You can accelerate performance by using other HTTP servers (like nginx, lighttpd or thttpd) to acceleration to GET requests.
-
-thttpd for acceleration
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-::
-
-    [on node04]$ thttpd -p 19800 -d /var/ls4/node04/data
-
-nginx for acceleration
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-::
-
-    server {
-      listen 19800;
-      server_name localhost;
-      sendfile on;
-      location / {
-        root /var/ls4/node04/data;
-      }
-    }
-
-DS setting
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-.. TODO
-
-::
-
-    [on node04]$ ls4-ds --cs cs.node --address node04 --nid N --rsid R --name N \
-                           -s /var/ls4/node04 \
-                           --http-redirect-port 19800
+Related: :ref:`howto_offload`
 
 
 References

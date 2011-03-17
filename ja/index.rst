@@ -10,9 +10,8 @@ LS4ドキュメント
    install
    build
    operation
-   fault
-   command
    plugin
+   command
    api
    devel
    faq

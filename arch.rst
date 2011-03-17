@@ -45,13 +45,21 @@ LS4 consists of 4 kind of servers:
   DS (data server)
     DS stores and replicates contents on the disk.
   MDS (metadata server)
-    MDS stores metadata of the contents. It includes the information that shows which DS stores the content. LS4 uses `Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ or other systems for MDS (See :ref:`plugin`).
+    MDS stores metadata of the contents. Metadata includes information about "where the content is stored." LS4 uses `Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ or other systems for the MDS (See :ref:`plugin`).
   GW (gateway)
     GW receives requests from applications and relays it to appropriate DS. You can use DS as a GW because DS has features of GW.
   CS (config server)
     CS manages cluster configuration. It also watches status of DSs and detaches crashed DSs automatically.
 
-Multiple DSs composes a group whose member stores same data. The group is called **replica-set**.
+DSs belong to **Replica Sets**.
+
+
+.. _arch_replica_set:
+
+Replica Sets
+----------------------
+
+Multiple DSs composes a group whose member stores same data. The group is called **Replica Set**.
 
 ::
 
@@ -60,18 +68,23 @@ Multiple DSs composes a group whose member stores same data. The group is called
             ----------- GW      GW      GW or DS
            /            /
     +-------------+    |  GW relays requests from apps to DSs.
-    |     MDS     |    |
-    |      |      |  +----+   +----+   +----+
+    |             |    |
+    |             |  +----+   +----+   +----+
     |     MDS     |  | DS |   | DS |   | DS |
-    |      |      |  |    |   |    |   |    | Multiple DSs composes a replica-set.
-    |     MDS     |  | DS |   | DS |   | DS | DSs in a replica-set store same data.
+    |             |  |    |   |    |   |    | Multiple DSs compose a replica-set.
+    |             |  | DS |   | DS |   | DS | DSs in a replica-set store same data set.
     +-------------+  |    |   |    |   |    |
-     MDSs store      | DS |   | DS |   | DS | ... You can add replica-sets at any time.
-     metadata.       +----+   +----+   +----+
+    MDS store        | DS |   | DS |   | DS | ... You can add replica-sets at any time.
+    metadata         +----+   +----+   +----+
                          \       |       /
                           -----  |  ----- CS manages cluster configuration.
                                \ | /
                                 CS
+
+
+All DSs in a replica-set are on an equal relationship. Generally, a master server in the replica-set processes all reading and writing requests. Different master servers are selected by each keys.
+
+When :ref:`Location-aware master selection <howto_location>` is enabled, one of the nearlest DSs are selected with priority.
 
 
 Operations
@@ -132,9 +145,9 @@ Metadata servers know which replica-set stores the data. So gateway (or data ser
 2. GW (or DS) sends search query to MDS. MDS returns ID of replica-set that has the requested data if it's found.
 3. GW (or DS) selects a DS from the replica-set, and sends get request to the DS. The DS is selected using location-aware algorithm
 
-.. (TODO: See HowTo Geo-redundancy).
-
 Related: :ref:`api`
+
+Related: :ref: `howto_location`
 
 
 Updating and geting attributes
