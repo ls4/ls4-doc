@@ -10,7 +10,7 @@ It describes how to construct the LS4 cluster in this document.
    :local:
 
 Running on single host (stand-alone)
-----------------------
+------------------------------------
 
 You can try LS4 on single host using **ls4-standalone** command. It starts stand-alone server.
 
@@ -194,7 +194,7 @@ Advanced Techniques
 .. _build_ipalias:
 
 Assigning exclusive IP alias for the CS
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can't change the IP address of the configuration server. In other words, the address becomes identifier of the cluster.
 

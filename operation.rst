@@ -1,7 +1,7 @@
 .. _operation:
 
 Operation and Fault management
-======================
+==============================
 
 LS4 is a distributed storage system that provides high scalability and availability. It describes how to scale and recover servers without any impacts for the applications in this document.
 
@@ -13,7 +13,7 @@ Adding data servers
 ----------------------
 
 Creating a new replica-set
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Both storage capacity and I/O performance grow by creating new replica-set
 
@@ -60,7 +60,7 @@ Related: :ref:`operation_weight`
 .. _operation_add_server:
 
 Adding servers to existing replica-sets
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can raise availability and read performance of the replica-set by adding a server to existing a replica-set
 
@@ -187,7 +187,7 @@ Finally, confirm the status of the cluster:
 .. _operation_weight:
 
 Changing weight of replica-sets
-----------------------
+-------------------------------
 
 To store new data, a replica-set is selected based on the **weights**. The default weight is 10.
 
@@ -250,7 +250,7 @@ Related: :ref:`command_ctl`
 
 
 Recovering configuration server
-----------------------
+-------------------------------
 
 Since IP address of the configuration server can't be change, you must use same IP address of the crashed server on a substitute server. Or if exclusive IP alias is set for the address, set it to the substitute server (See :ref:`build_ipalias`).
 
@@ -298,27 +298,20 @@ To visualize the load using monitoring systems like Nagios or MUNIN, use :ref:`l
 .. Backup
 .. ----------------------
 .. 
-.. TODO
+.. TODO backup
 .. 
 .. Items to backup
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
-.. TODO
-.. 
 .. Backup cluster information
 .. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. TODO
 .. 
 .. Backup data
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
-.. TODO
-.. 
 .. Backup metadata
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
-.. TODO
 
 
 Next step: :ref:`plugin`

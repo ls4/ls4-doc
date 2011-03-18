@@ -25,7 +25,7 @@ Following softwares are required to run LS4:
 
 
 Choice 1: Install using RubyGems
-----------------------
+--------------------------------
 
 The easiest way to install LS4 will be to use RubyGems, if you're using Ruby.
 
@@ -43,7 +43,7 @@ Use rake comamnd to make latest gem package from the repository.
     $ gem install pkg/ls4-<version>.gem
 
 Choice 2: Install using make-install
-----------------------
+------------------------------------
 
 The other way is to use ./configure && make install:
 
@@ -76,7 +76,7 @@ Following commands will be installed:
   - ls4-standalone: Stand-alone server program
 
 Chocie 3: Installing Ruby 1.9 for exclusive use
-----------------------
+-----------------------------------------------
 
 In this guide, you will install all systems on /opt/local/ls4 directory.
 

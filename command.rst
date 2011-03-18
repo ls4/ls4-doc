@@ -12,7 +12,7 @@ Command-line reference
 .. _command_cs:
 
 ls4-cs: configuration server
-----------------------
+----------------------------
 
 ::
 
@@ -239,7 +239,7 @@ This option can be overwritten by *--fault_store*, *--membership* and *--weight_
 .. _command_standalone:
 
 ls4-standalone: stand-alone server
-----------------------
+----------------------------------
 
 ls4-standalone is a program that provides all server functions in a single process. It is useful for the verification of the LS4.
 
@@ -301,7 +301,7 @@ Related: :ref:`plugin_mds_cache`
 .. _command_cmd:
 
 ls4cmd: command line client
-----------------------
+---------------------------
 
 ::
 
@@ -332,10 +332,10 @@ ls4cmd: command line client
 .. TODO ls4cmd
 
 
-.. _command_rpc
+.. _command_rpc:
 
 ls4rpc: RPC command-line client
-----------------------
+-------------------------------
 
 ::
 
@@ -359,7 +359,7 @@ The port number must be specified. Default port numbers of the servers are as fo
 .. _command_top:
 
 ls4top: monitoring tool like 'top'
-----------------------
+----------------------------------
 
 ::
 
@@ -371,7 +371,7 @@ ls4top: monitoring tool like 'top'
 .. _command_stat:
 
 ls4stat: status gathering tool for monitoring/visualization systems
-----------------------
+-------------------------------------------------------------------
 
 ::
 

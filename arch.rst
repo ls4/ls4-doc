@@ -151,7 +151,7 @@ Related: :ref: `howto_location`
 
 
 Updating and geting attributes
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Attributes are stored on metadata servers.
 
@@ -178,7 +178,7 @@ Related: :ref:`api`
 
 
 Controling and Monitoring
-----------------------
+--------------------------
 
 All data servers are registered on configuration server. Controling and monitoring tools deal with all data servers all together by changing settings on configuration server or taking server list from the configuration server.
 

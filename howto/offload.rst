@@ -75,7 +75,7 @@ Specify the port number of the HTTP server on *--http-redirect-port PORT* argume
                            -s /var/ls4/node04 \
                            --http-redirect-port 19800
 
-.. TODO
+.. TODO ds setting
 
 .. TODO http-redirect-path
 

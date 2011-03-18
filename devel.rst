@@ -16,28 +16,26 @@ Debugging and Improvement
 .. 
 .. Share your improvements
 .. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. 
-.. Getting the latest source codes
-.. ----------------------
 
 
-.. Improving LS4
-.. ----------------------
-.. 
-.. Writing storage engine
+Getting the latest source codes
+-------------------------------
+
+Development repository of the LS4 is on github. You can checkout it from http://github.com/ls4/ls4.
+
+This document is also on github. You can checkout it from http://github.com/ls4/ls4-doc and get formatted document at http://ls4.sourceforge.net/doc/. It uses `Sphinx <http://Sphinx.pocoo.org/>`_ to format this document.
+
+
+.. Adding MDS plug-in
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
-.. Writing MDS engine
+.. Adding MDS cache plug-in
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
-.. Writing update log engine
+.. Adding load-balancing plug-in
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
-.. Writing master node selector
-.. ^^^^^^^^^^^^^^^^^^^^^^
-.. 
-.. Writing load-balancing engine
+.. Adding master selector
 .. ^^^^^^^^^^^^^^^^^^^^^^
 .. 
 .. Adding statics item
@@ -63,31 +61,32 @@ Debugging and Improvement
 .. ^^^^^^^^^^^^^^^^^^^^^^
 
 Source tree
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
 ::
 
     lib/ls4
     |
-    +-- lib/                    Fundamental libraries
+    +-- lib/
     |   |
-    |   +-- ebus.rb             EventBus
-    |   +-- cclog.rb            Logging library
-    |   +-- vbcode.rb           Variable byte code
+    |   +-- ebus.rb
+    |   +-- cclog.rb
+    |   +-- vbcode.rb
     |
     +-- logic/
     |   |
-    |   +-- node.rb             Definition of the Node class
-    |   +-- okey.rb             Definition of the ObjectKey class
-    |   +-- tsv_data.rb         Base class to use tab separated values
-    |   +-- fault_detector.rb   Fault detector
-    |   +-- membership.rb       Node list and replica-set list
-    |   +-- weight.rb           Load balancing feature
+    |   +-- node.rb
+    |   +-- okey.rb
+    |   +-- tsv_data.rb
+    |   +-- fault_detector.rb
+    |   +-- membership.rb
+    |   +-- weight.rb
     |
     +-- service/
     |   |
     |   +-- base.rb
     |   +-- bus.rb
+    |   +-- log.rb
     |   |
     |   +-- process.rb
     |   |
@@ -136,21 +135,28 @@ Source tree
     |   +-- mds_ha.rb
     |   +-- mds_tt.rb
     |   +-- mds_memcache.rb
+    |   +-- mds_tc.rb
+    |   |
+    |   +-- mds_cache.rb
+    |   +-- mds_cache_mem.rb
+    |   +-- mds_cache_memcached.rb
     |   |
     |   +-- storage.rb
     |   +-- storage_dir.rb
     |
     +-- command/
     |   |
-    |   +-- ctl.rb              Control tool
-    |   +-- cs.rb               CS main
-    |   +-- ds.rb               DS main
-    |   +-- gw.rb               GW main
-    |   +-- cli.rb              Command line client program
+    |   +-- cs.rb
+    |   +-- ds.rb
+    |   +-- gw.rb
+    |   +-- standalone.rb
+    |   +-- ctl.rb
+    |   +-- cmd.rb
+    |   +-- rpc.rb
+    |   +-- stat.rb
+    |   +-- top.rb
     |
-    +-- default.rb              Some constants like default port number
-    |
-    +-- log.rb
+    +-- default.rb
     |
     +-- version.rb
 

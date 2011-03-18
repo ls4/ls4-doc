@@ -1,7 +1,7 @@
 .. _ja_howto_offload:
 
 Traffic Offloading: HTTPサーバ機能を別プロセスに委譲してDSの性能を向上する
-=========================================================================
+================================================================================
 
 .. contents::
    :backlinks: none
@@ -76,7 +76,7 @@ HTTPサーバのポート番号を *--http-redirect-port PORT* 引数に指定�
                            -s /var/ls4/node04 \
                            --http-redirect-port 19800
 
-.. TODO
+.. TODO ds setting
 
 .. TODO http-redirect-path
 

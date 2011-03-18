@@ -11,7 +11,7 @@ Misc.
 ----------------------
 
 DS or GW says "sytem time must be adjusted"
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This message is shown when system time of the DS or GW is too different from the system time of CS. You should use ntpd or ntpdate command to adjust it.
 
@@ -19,7 +19,7 @@ GW (or DS) uses system time to set creation time when adding (and removing) a ob
 
 
 How to know where the data was stored?
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Use **ls4ctl** **locate** command as follows:
 
