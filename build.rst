@@ -24,8 +24,8 @@ It is prepared to use LS4. Use the command-line client *ls4cmd* to confirm the w
 
 ::
 
-    $ ls4cmd add_data key1 val1
-    $ ls4cmd get_data key1
+    $ ls4cmd localhost add_data key1 val1
+    $ ls4cmd localhost get_data key1
     val1
 
 You can use HTTP clients to read/write data:
@@ -132,18 +132,18 @@ DS requires the address of the CS, an unique node ID, human-readable node name, 
                            --rsid 1 -s /var/ls4/node03
     
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --name node04 \
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 2 --name node04 \
                            --rsid 1 -s /var/ls4/node04
 
 ::
 
     # node05 and node06 compose replica-set 2
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --name node05 \
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 3 --name node05 \
                            --rsid 2 -s /var/ls4/node05
     
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --name node06 \
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 4 --name node06 \
                            --rsid 2 -s /var/ls4/node06
 
 Related: :ref:`command`

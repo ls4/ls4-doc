@@ -31,7 +31,7 @@ LS4を実行するには次のソフトウェアが必要です：
 
 ::
 
-    $ gem install pkg/ls4-<version>.gem
+    $ gem install ls4
 
 もしリポジトリから最新のバージョンをダウンロードして利用したい場合は、rakeを使ってgemを作成してください。
 

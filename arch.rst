@@ -59,7 +59,7 @@ DSs belong to **Replica Sets**.
 Replica Sets
 ----------------------
 
-Multiple DSs composes a group whose member stores same data. The group is called **Replica Set**.
+Multiple DSs compose a group whose member stores same data. The group is called **Replica Set**.
 
 ::
 

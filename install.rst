@@ -31,7 +31,7 @@ The easiest way to install LS4 will be to use RubyGems, if you're using Ruby.
 
 ::
 
-    $ gem install pkg/ls4-<version>.gem
+    $ gem install ls4
 
 Use rake comamnd to make latest gem package from the repository.
 

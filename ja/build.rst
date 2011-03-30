@@ -24,8 +24,8 @@
 
 ::
 
-    $ ls4cmd add_data key1 val1
-    $ ls4cmd get_data key1
+    $ ls4cmd localhost add_data key1 val1
+    $ ls4cmd localhost get_data key1
     val1
 
 HTTPクライアントを使ってデータを読み書きすることもできます：
@@ -134,18 +134,18 @@ DSを起動していきます。
                            --rsid 1 -s /var/ls4/node03
     
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --name node04 \
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 2 --name node04 \
                            --rsid 1 -s /var/ls4/node04
 
 ::
 
     # node05, node06: レプリカセット2を構成
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --name node05 \
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 3 --name node05 \
                            --rsid 2 -s /var/ls4/node05
     
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --name node06 \
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 4 --name node06 \
                            --rsid 2 -s /var/ls4/node06
 
 関連： :ref:`ja_command`

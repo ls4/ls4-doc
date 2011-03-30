@@ -334,7 +334,7 @@ ls4cmd: command line client
 
 .. _command_rpc:
 
-ls4rpc: RPC command-line client
+ls4rpc: Interactive RPC client
 -------------------------------
 
 ::
