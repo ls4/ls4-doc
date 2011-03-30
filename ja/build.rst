@@ -66,12 +66,12 @@ HTTPクライアントを使ってデータを読み書きすることもでき�
 
      + - - - - - - - -+    + - - - - - - - -+
      |                |    |                |
-        node01                node02         
+        node03                node05         
      |  +----------+  |    |  +----------+  |
         |  ls4-ds  |          |  ls4-ds  |   
      |  +----------+  |    |  +----------+  |
                                              
-     |  node01        |    |  node02        |    アプリケーションサーバ
+     |  node04        |    |  node06        |    アプリケーションサーバ
         +----------+          +----------+       +----------+
      |  |  ls4-ds  |  |    |  |  ls4-ds  |  |    |  ls4-gw  |
         +----------+          +----------+       +----------+
@@ -130,22 +130,22 @@ DSを起動していきます。
 
     # node03, node04: レプリカセット1を構成
     [on node03]$ mkdir /var/ls4/node03
-    [on node03]$ ls4-ds --cs node01 --address node03 --nid 1 --name node03 \
+    [on node03]$ ls4-ds --cs node01 --address node03 --nid 0 --name node03 \
                            --rsid 1 -s /var/ls4/node03
     
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 2 --name node04 \
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --name node04 \
                            --rsid 1 -s /var/ls4/node04
 
 ::
 
     # node05, node06: レプリカセット2を構成
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 3 --name node05 \
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --name node05 \
                            --rsid 2 -s /var/ls4/node05
     
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 4 --name node06 \
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --name node06 \
                            --rsid 2 -s /var/ls4/node06
 
 関連： :ref:`ja_command`

@@ -66,12 +66,12 @@ It runs runs 6-node cluster in this tutorial. It uses Tokyo Tyrant for the metad
 
      + - - - - - - - -+    + - - - - - - - -+
      |                |    |                |
-        node01                node02         
+        node03                node05         
      |  +----------+  |    |  +----------+  |
         |  ls4-ds  |          |  ls4-ds  |   
      |  +----------+  |    |  +----------+  |
                                              
-     |  node01        |    |  node02        |    application server
+     |  node04        |    |  node05        |    application server
         +----------+          +----------+       +----------+
      |  |  ls4-ds  |  |    |  |  ls4-ds  |  |    |  ls4-gw  |
         +----------+          +----------+       +----------+
@@ -128,22 +128,22 @@ DS requires the address of the CS, an unique node ID, human-readable node name, 
 
     # node03 and node04 compose replica-set 1
     [on node03]$ mkdir /var/ls4/node03
-    [on node03]$ ls4-ds --cs node01 --address node03 --nid 1 --name node03 \
+    [on node03]$ ls4-ds --cs node01 --address node03 --nid 0 --name node03 \
                            --rsid 1 -s /var/ls4/node03
     
     [on node04]$ mkdir /var/ls4/node04
-    [on node04]$ ls4-ds --cs node01 --address node04 --nid 2 --name node04 \
+    [on node04]$ ls4-ds --cs node01 --address node04 --nid 1 --name node04 \
                            --rsid 1 -s /var/ls4/node04
 
 ::
 
     # node05 and node06 compose replica-set 2
     [on node05]$ mkdir /var/ls4/node05
-    [on node05]$ ls4-ds --cs node01 --address node05 --nid 3 --name node05 \
+    [on node05]$ ls4-ds --cs node01 --address node05 --nid 2 --name node05 \
                            --rsid 2 -s /var/ls4/node05
     
     [on node06]$ mkdir /var/ls4/node06
-    [on node06]$ ls4-ds --cs node01 --address node06 --nid 4 --name node06 \
+    [on node06]$ ls4-ds --cs node01 --address node06 --nid 3 --name node06 \
                            --rsid 2 -s /var/ls4/node06
 
 Related: :ref:`command`
