@@ -17,102 +17,115 @@ Following softwares are required to run LS4:
 
   - `Ruby <http://www.ruby-lang.org/>`_ >= 1.9.2
   - `Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ >= 1.1.40
-  - `MessagePack-RPC for Ruby gem <http://msgpack.org/>`_ >= 0.4.3
-  - `Rack gem <http://rack.rubyforge.org/>`_ >= 1.2.1
-  - `Tokyo Cabinet gem <http://rubygems.org/gems/tokyocabinet>`_ >= 1.29
-  - `Tokyo Tyrant gem <http://rubygems.org/gems/tokyotyrant>`_ >= 1.13
-  - `memcache-client gem <http://rubygems.org/gems/memcache-client>`_ >= 1.8.5
+
+..  - `MessagePack-RPC for Ruby gem <http://msgpack.org/>`_ >= 0.4.3
+..  - `Rack gem <http://rack.rubyforge.org/>`_ >= 1.2.1
+..  - `Tokyo Cabinet gem <http://rubygems.org/gems/tokyocabinet>`_ >= 1.29
+..  - `Tokyo Tyrant gem <http://rubygems.org/gems/tokyotyrant>`_ >= 1.13
+..  - `memcache-client gem <http://rubygems.org/gems/memcache-client>`_ >= 1.8.5
 
 
-Choice 1: Install using RubyGems
+.. _install_step1:
+
+1. Installing Ruby
 --------------------------------
 
-The easiest way to install LS4 will be to use RubyGems, if you're using Ruby.
+If Ruby >= 1.9.2 is already installed, skip to :ref:`install_step2`.
+
+On moderen OS, it is provided by the package systems:
+
+::
+
+    ## Ubuntu/Debian
+    $ sudo aptitude install ruby1.9
+    $ ruby1.9 --version
+    $ gem1.9 install ls4
+    
+    ## Mac OS X:
+    $ sudo port install ruby19
+    $ ruby1.9 --version
+    $ gem1.9 install ls4
+
+To install Ruby from source, do following commands:
+
+::
+
+    $ wget http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p180.tar.gz
+    $ tar zxvf ruby-1.9.2-p180.tar.gz
+    $ cd ruby-1.9.2-p180
+    
+    $ ./configure
+    $ make -j3
+    $ sudo make install
+
+You may be required to install following packages to build Ruby.
+
+  - openssl-devel (or libssl-dev)
+  - zlib-devel (or zlib1g-dev)
+  - readline-devel (or libreadline6-dev)
+
+
+.. _install_step2:
+
+2. Installing LS4
+------------------------------------
+
+Use gem command to install LS4:
 
 ::
 
     $ gem install ls4
 
-Use rake comamnd to make latest gem package from the repository.
+Following commands are installed:
 
-::
+  - :ref:`ja_command_ctl`
+  - :ref:`ja_command_cmd`
+  - :ref:`ja_command_rpc`
+  - :ref:`ja_command_top`
+  - :ref:`ja_command_stat`
+  - :ref:`ja_command_cs`
+  - :ref:`ja_command_ds`
+  - :ref:`ja_command_gw`
+  - :ref:`ja_command_standalone`
 
-    $ git clone http://github.com/ls4/ls4.git
-    $ cd ls4
-    $ rake
-    $ gem install pkg/ls4-<version>.gem
 
-Choice 2: Install using make-install
-------------------------------------
+.. _install_step3:
 
-The other way is to use ./configure && make install:
-
-::
-
-    $ ./bootstrap  # if needed
-    $ ./configure RUBY=/usr/local/bin/ruby
-    $ make
-    $ sudo make install
-
-Install required libraries manually.
-
-::
-
-    $ gem install msgpack-rpc
-    $ gem install tokyocabinet
-    $ gem install tokyotyrant
-    $ gem install memcache-client
-    $ gem install rack
-
-Following commands will be installed:
-
-  - ls4ctl: Management tool
-  - ls4cli: Command line client
-  - ls4rpc: Command line RPC client
-  - ls4top: Monitoring tool like 'top'
-  - ls4-cs: CS server program
-  - ls4-ds: DS server program
-  - ls4-gw: GW server program
-  - ls4-standalone: Stand-alone server program
-
-Chocie 3: Installing Ruby 1.9 for exclusive use
+3. Installing Tokyo Tyrant
 -----------------------------------------------
 
-In this guide, you will install all systems on /opt/local/ls4 directory.
+`Tokyo Tyrant <http://fallabs.com/tokyotyrant/>`_ is used as a metadata server (MDS) in LS4.
 
-First, install folowing packages using the package management system:
-
-  - gcc-g++ >= 4.1
-  - openssl-devel (or libssl-dev) to build Ruby
-  - zlib-devel (or zlib1g-dev) to build Ruby
-  - readline-devel (or libreadline6-dev) to build Ruby
-  - tokyocabinet (or libtokyocabinet-dev) to build Tokyo Tyrant
-
-Following procedure installs Ruby and LS4:
+On some OS, it is provided by the package systems:
 
 ::
 
-    # Installs ruby-1.9 into /opt/local/ls4
-    $ wget ftp://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p136.tar.bz2
-    $ tar jxvf ruby-1.9.2-p136.tar.bz2
-    $ cd ruby-1.9.2-p136
-    $ ./configure --prefix=/opt/local/ls4
-    $ make
+    ## Ubuntu/Debian:
+    $ sudo aptitude install tokyotyrant
+    
+    ## Mac OS X:
+    $ sudo port install tokyotyrant
+
+To install Tokyo Tyrant from source, do following commands:
+
+::
+
+    ## Install Tokyo Cabinet (database manager)
+    $ wget http://fallabs.com/tokyocabinet/tokyocabinet-1.4.47.tar.gz
+    $ tar zxvf tokyocabinet-1.4.47.targz
+    $ cd tokyocabinet-1.4.47
+    
+    $ ./configure
+    $ make -j3
     $ sudo make install
 
-::
-
-    # Installs required gems and LS4
-    $ sudo /opt/local/ls4/bin/gem install ls4
-
-::
-
-    # Installs Tokyo Tyrant into /opt/local/ls4
+    ## Install Tokyo Tyrant
     $ wget http://fallabs.com/tokyotyrant/tokyotyrant-1.1.41.tar.gz
-    $ tar zxvf tokyotyrant-1.1.41.tar.gz
-    $ cd tokyotyrant-1.1.41
-    $ ./configure --prefix=/opt/local/ls4
-    $ make
+    $ tar zxvf tokyotyrant-1.1.41.targz
+    $ cd tokyotyrant
+    
+    $ ./configure
+    $ make -j3
     $ sudo make install
 
 

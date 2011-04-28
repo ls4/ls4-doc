@@ -62,7 +62,7 @@ Scheme is **mc:host[:port]**. The default port number is 11211.
 MDS cache plug-in
 ----------------------
 
-You can enable metadata cache by adding *--mds-cache* option on gateway (or data server).
+You can enable metadata cache by adding *--mds-cache* option on config server.
 
 Memcached (mc:)
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -74,7 +74,7 @@ This uses `memcached <http://memcached.org/>`_ for the the MDS cache. You can us
 Scheme is **mc:<servers>[;<expire>]**
 
 
-Local memory (lcoal:)
+Local memory (local:)
 ^^^^^^^^^^^^^^^^^^^^^^
 
 This uses local memory for the MDS cache.
